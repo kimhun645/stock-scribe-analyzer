@@ -57,7 +57,7 @@ export default function Reports() {
             {
               label: "มูลค่าสต็อก",
               value: `฿${products.reduce((sum, p) => sum + (p.unit_price * p.current_stock), 0).toLocaleString()}`,
-              icon: DollarSign
+              icon: () => <span className="text-2xl font-bold">฿</span>
             },
             {
               label: "สินค้าสต็อกต่ำ",

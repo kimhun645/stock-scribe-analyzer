@@ -12,7 +12,7 @@ export function Layout({ children, title, hideHeader = false }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-primary relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-hero relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
@@ -39,9 +39,13 @@ export function Layout({ children, title, hideHeader = false }: LayoutProps) {
         {!hideHeader && <Header title={title || ''} onMenuClick={() => setSidebarOpen(true)} />}
         
         <main className={`flex-1 overflow-auto ${hideHeader ? 'pt-0' : ''}`}>
-          <div className="w-full px-4 py-6 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-7xl">
-              {children}
+          <div className="w-full px-4 py-6 sm:px-6 lg:px-8 relative">
+            {/* Content Background */}
+            <div className="absolute inset-0 bg-white/40 backdrop-blur-xl rounded-t-3xl border border-white/20 shadow-glow -z-10"></div>
+            <div className="relative z-10 w-full">
+              <div className="mx-auto max-w-7xl">
+                {children}
+              </div>
             </div>
           </div>
         </main>

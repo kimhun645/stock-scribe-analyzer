@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScanLine, Search, Package, AlertCircle, Camera, CameraOff, BarChart3 } from 'lucide-react';
 import { supabase, type Product } from '@/lib/supabase';
+import { BrowserMultiFormatReader } from '@zxing/library';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProductWithCategory extends Product {
@@ -20,7 +21,10 @@ export default function Scanner() {
   const [scannedProduct, setScannedProduct] = useState<ProductWithCategory | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [recentScans, setRecentScans] = useState<ProductWithCategory[]>([]);
+  const [cameraPermission, setCameraPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
   const [scannerDetected, setScannerDetected] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
   const scannerInputRef = useRef<string>('');
   const scannerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -76,13 +80,88 @@ export default function Scanner() {
     }
   };
 
-  // Camera scanning is temporarily disabled due to dependency issues
-  const handleCameraScanClick = () => {
-    toast({
-      title: "ฟีเจอร์กล้องไม่พร้อมใช้งาน",
-      description: "กรุณาใช้การป้อนข้อมูลด้วยตนเองหรือเครื่องอ่านบาร์โค้ด",
-      variant: "destructive",
-    });
+  const startCameraScanning = async () => {
+    try {
+      setIsScanning(true);
+      
+      // Request camera permission
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: 'environment' // Use back camera if available
+        } 
+      });
+      
+      setCameraPermission('granted');
+      
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+        
+        // Initialize barcode reader
+        codeReaderRef.current = new BrowserMultiFormatReader();
+        
+        codeReaderRef.current.decodeFromVideoDevice(
+          undefined,
+          videoRef.current,
+          async (result, error) => {
+            if (result) {
+              const barcodeValue = result.getText();
+              setBarcode(barcodeValue);
+              
+              // Stop scanning and search for product
+              stopScanning();
+              
+              const product = await searchProductByBarcode(barcodeValue);
+              setScannedProduct(product);
+              
+              if (product) {
+                setRecentScans(prev => {
+                  const filtered = prev.filter(p => p.id !== product.id);
+                  return [product, ...filtered].slice(0, 5);
+                });
+                
+                toast({
+                  title: "สแกนสำเร็จ",
+                  description: `${product.name} - คงเหลือ ${product.current_stock} ชิ้น`,
+                });
+              } else {
+                toast({
+                  title: "ไม่พบสินค้า",
+                  description: `ไม่พบสินค้าที่มี SKU: ${barcodeValue}`,
+                  variant: "destructive",
+                });
+              }
+            }
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Camera error:', error);
+      setCameraPermission('denied');
+      setIsScanning(false);
+      
+      toast({
+        title: "ไม่สามารถเข้าถึงกล้องได้",
+        description: "กรุณาอนุญาตการใช้งานกล้องหรือใช้การป้อนข้อมูลด้วยตนเอง",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopScanning = () => {
+    setIsScanning(false);
+    
+    // Stop camera stream
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+    
+    // Stop barcode reader
+    if (codeReaderRef.current) {
+      codeReaderRef.current.reset();
+    }
   };
 
   // Barcode scanner detection and handling
@@ -154,6 +233,7 @@ export default function Scanner() {
       if (scannerTimeoutRef.current) {
         clearTimeout(scannerTimeoutRef.current);
       }
+      stopScanning();
     };
   }, [toast]);
 
@@ -173,7 +253,7 @@ export default function Scanner() {
             },
             {
               label: "สถานะกล้อง",
-              value: 'ไม่พร้อมใช้งาน',
+              value: cameraPermission === 'granted' ? 'เชื่อมต่อแล้ว' : cameraPermission === 'denied' ? 'ไม่อนุญาต' : 'รอการอนุญาต',
               icon: Camera
             },
             {
@@ -191,29 +271,54 @@ export default function Scanner() {
           <Card className="bg-gradient-card shadow-card">
             <CardContent className="p-4 sm:p-6">
               <div className="text-center space-y-4">
-                <div className="relative mx-auto w-full max-w-sm aspect-[4/3] rounded-lg border-2 border-dashed border-muted overflow-hidden bg-muted/20">
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center space-y-2">
-                      <Camera className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground mx-auto" />
-                      <p className="text-xs text-muted-foreground">ฟีเจอร์กล้องไม่พร้อมใช้งาน</p>
+                <div className="relative mx-auto w-full max-w-sm aspect-[4/3] rounded-lg border-2 border-dashed border-muted overflow-hidden bg-black">
+                  {isScanning ? (
+                    <video
+                      ref={videoRef}
+                      className="w-full h-full object-cover"
+                      autoPlay
+                      playsInline
+                      muted
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <Camera className="h-8 w-8 sm:h-12 sm:w-12 text-muted-foreground" />
                     </div>
-                  </div>
+                  )}
+                  
+                  {isScanning && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-20 sm:w-32 h-1 bg-primary animate-pulse"></div>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex space-x-2">
                   <Button 
-                    onClick={handleCameraScanClick}
-                    disabled={true}
-                    className="flex-1 bg-gradient-primary hover:bg-primary/90 text-sm sm:text-base opacity-50"
+                    onClick={startCameraScanning}
+                    disabled={isScanning || cameraPermission === 'denied'}
+                    className="flex-1 bg-gradient-primary hover:bg-primary/90 text-sm sm:text-base"
                   >
                     <Camera className="mr-2 h-4 w-4" />
-                    กล้องไม่พร้อมใช้งาน
+                    {isScanning ? 'กำลังสแกน...' : 'เริ่มสแกน'}
                   </Button>
+                  
+                  {isScanning && (
+                    <Button 
+                      onClick={stopScanning}
+                      variant="outline"
+                      size="icon"
+                    >
+                      <CameraOff className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
                 
-                <p className="text-xs sm:text-sm text-muted-foreground text-center">
-                  กรุณาใช้การป้อนข้อมูลด้วยตนเองหรือเครื่องอ่านบาร์โค้ด
-                </p>
+                {cameraPermission === 'denied' && (
+                  <p className="text-xs sm:text-sm text-destructive">
+                    ไม่สามารถเข้าถึงกล้องได้ กรุณาใช้การป้อนข้อมูลด้วยตนเอง
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

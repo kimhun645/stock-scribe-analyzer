@@ -16,8 +16,7 @@ import {
   BarChart3,
   Activity,
   Users,
-  Building2,
-  CircleDollarSign
+  Building2
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -97,7 +96,7 @@ export default function Dashboard() {
               label: "มูลค่ารวมสต็อก",
               value: formatCurrency(stats.totalValue),
               trend: { value: "8%", isPositive: true },
-              icon: CircleDollarSign
+              icon: () => <span className="text-2xl font-bold">฿</span>
             },
             {
               label: "สินค้าใกล้หมด",
