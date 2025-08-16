@@ -12,7 +12,7 @@ export function Layout({ children, title, hideHeader = false }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-hero relative overflow-hidden">
+    <div className="min-h-screen w-full bg-primary relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
