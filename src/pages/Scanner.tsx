@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScanLine, Search, Package, AlertCircle, Camera, CameraOff, BarChart3 } from 'lucide-react';
 import { supabase, type Product } from '@/lib/supabase';
-import { BrowserMultiFormatReader } from '@zxing/library';
+import { BrowserMultiFormatReader } from '@zxing/browser';
 import { useToast } from '@/hooks/use-toast';
 
 interface ProductWithCategory extends Product {
@@ -160,7 +160,12 @@ export default function Scanner() {
     
     // Stop barcode reader
     if (codeReaderRef.current) {
-      codeReaderRef.current.reset();
+      try {
+        // Clean up any existing scanning process
+        codeReaderRef.current = null;
+      } catch (error) {
+        console.error('Error stopping barcode reader:', error);
+      }
     }
   };
 
