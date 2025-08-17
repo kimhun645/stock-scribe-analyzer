@@ -96,7 +96,7 @@ export default function Dashboard() {
               label: "มูลค่ารวมสต็อก",
               value: formatCurrency(stats.totalValue),
               trend: { value: "8%", isPositive: true },
-              icon: () => <span className="text-2xl font-bold">฿</span>
+              icon: TrendingUp
             },
             {
               label: "สินค้าใกล้หมด",
