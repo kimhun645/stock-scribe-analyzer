@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScanLine, Search, Package, AlertCircle, Camera, CameraOff, BarChart3 } from 'lucide-react';
 import { supabase, type Product } from '@/lib/supabase';
-import { BrowserMultiFormatReader } from '@zxing/library';
+// Camera scanning temporarily disabled - @zxing/library removed due to build issues
 import { useToast } from '@/hooks/use-toast';
 
 interface ProductWithCategory extends Product {
@@ -24,7 +24,7 @@ export default function Scanner() {
   const [cameraPermission, setCameraPermission] = useState<'granted' | 'denied' | 'prompt'>('prompt');
   const [scannerDetected, setScannerDetected] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
+  const codeReaderRef = useRef<any>(null);
   const scannerInputRef = useRef<string>('');
   const scannerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
@@ -97,43 +97,13 @@ export default function Scanner() {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
         
-        // Initialize barcode reader
-        codeReaderRef.current = new BrowserMultiFormatReader();
-        
-        codeReaderRef.current.decodeFromVideoDevice(
-          undefined,
-          videoRef.current,
-          async (result, error) => {
-            if (result) {
-              const barcodeValue = result.getText();
-              setBarcode(barcodeValue);
-              
-              // Stop scanning and search for product
-              stopScanning();
-              
-              const product = await searchProductByBarcode(barcodeValue);
-              setScannedProduct(product);
-              
-              if (product) {
-                setRecentScans(prev => {
-                  const filtered = prev.filter(p => p.id !== product.id);
-                  return [product, ...filtered].slice(0, 5);
-                });
-                
-                toast({
-                  title: "สแกนสำเร็จ",
-                  description: `${product.name} - คงเหลือ ${product.current_stock} ชิ้น`,
-                });
-              } else {
-                toast({
-                  title: "ไม่พบสินค้า",
-                  description: `ไม่พบสินค้าที่มี SKU: ${barcodeValue}`,
-                  variant: "destructive",
-                });
-              }
-            }
-          }
-        );
+        // Camera scanning temporarily disabled
+        toast({
+          title: "ฟีเจอร์ไม่พร้อมใช้งาน",
+          description: "การสแกนด้วยกล้องยังไม่พร้อมใช้งาน กรุณาใช้การป้อนข้อมูลด้วยตนเอง",
+          variant: "destructive",
+        });
+        stopScanning();
       }
     } catch (error) {
       console.error('Camera error:', error);
@@ -296,11 +266,11 @@ export default function Scanner() {
                 <div className="flex space-x-2">
                   <Button 
                     onClick={startCameraScanning}
-                    disabled={isScanning || cameraPermission === 'denied'}
-                    className="flex-1 bg-gradient-primary hover:bg-primary/90 text-sm sm:text-base"
+                    disabled={true}
+                    className="flex-1 bg-muted text-muted-foreground text-sm sm:text-base cursor-not-allowed"
                   >
                     <Camera className="mr-2 h-4 w-4" />
-                    {isScanning ? 'กำลังสแกน...' : 'เริ่มสแกน'}
+                    สแกนกล้อง (ไม่พร้อมใช้งาน)
                   </Button>
                   
                   {isScanning && (
