@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export function Header({ title, onMenuClick }: HeaderProps) {
   return (
-    <header className="bg-white/60 backdrop-blur-sm shadow-card border-b border-white/30 relative z-30">
+    <header className="bg-white/90 shadow-card border-b border-white/30 relative z-30">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center space-x-4">
           <Button
@@ -36,7 +36,7 @@ export function Header({ title, onMenuClick }: HeaderProps) {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <Input
               placeholder="ค้นหาสินค้า, SKU, หรือบาร์โค้ด..."
-              className="pl-9 bg-white/80 backdrop-blur-sm border-white/50"
+              className="pl-9 bg-white border-white/50"
             />
           </div>
 

@@ -39,7 +39,7 @@ export function PageHeader({
       {/* Main Header */}
       <Card className="bg-gradient-primary shadow-glow border-0 overflow-hidden relative">
         {/* Background decoration */}
-        <div className="absolute inset-0 bg-white/5 backdrop-blur-sm" />
+        <div className="absolute inset-0 bg-white/5" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
         
@@ -48,7 +48,7 @@ export function PageHeader({
             <div className="flex-1 space-y-3">
               <div className="flex items-center gap-3">
                 {Icon && (
-                  <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+                  <div className="p-3 bg-white/20 rounded-xl">
                     <Icon className="h-6 w-6 md:h-7 md:w-7 text-white" />
                   </div>
                 )}
@@ -69,7 +69,7 @@ export function PageHeader({
                 <Button 
                   onClick={primaryAction.onClick}
                   size="lg" 
-                  className="bg-white/20 hover:bg-white/30 text-white border-white/20 backdrop-blur-sm shadow-glow flex-1 lg:flex-none"
+                  className="bg-white/20 hover:bg-white/30 text-white border-white/20 shadow-glow flex-1 lg:flex-none"
                   variant="outline"
                 >
                   <primaryAction.icon className="h-5 w-5 mr-2" />

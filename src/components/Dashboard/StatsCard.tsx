@@ -24,7 +24,7 @@ export function StatsCard({
   className 
 }: StatsCardProps) {
   return (
-    <Card className={cn('bg-white/70 backdrop-blur-sm shadow-card hover:shadow-hover transition-all duration-300 border border-white/40', className)}>
+    <Card className={cn('bg-white shadow-card hover:shadow-hover transition-all duration-300 border border-white/40', className)}>
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
@@ -36,7 +36,7 @@ export function StatsCard({
               )}
             </div>
           </div>
-          <div className="p-3 bg-gradient-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
+          <div className="p-3 bg-gradient-primary/20 rounded-full border border-primary/30">
             <Icon className="h-6 w-6 text-primary drop-shadow-sm" />
           </div>
         </div>

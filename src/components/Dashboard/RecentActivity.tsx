@@ -90,7 +90,7 @@ export function RecentActivity({ movements }: RecentActivityProps) {
   };
 
   return (
-    <Card className="bg-white/70 backdrop-blur-sm shadow-card border border-white/40">
+    <Card className="bg-white shadow-card border border-white/40">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <CardTitle className="text-lg font-semibold text-gray-800 flex items-center">
           <Activity className="h-5 w-5 mr-2 text-primary" />

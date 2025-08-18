@@ -73,7 +73,7 @@ export function StockChart() {
   }, [chartData]);
 
   return (
-    <Card className="bg-white/70 backdrop-blur-sm shadow-card border border-white/40">
+    <Card className="bg-white shadow-card border border-white/40">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>

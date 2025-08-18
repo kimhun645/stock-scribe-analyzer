@@ -34,7 +34,7 @@ export function Sidebar() {
         <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
           <div className="flex flex-shrink-0 items-center px-4">
             <div className="flex items-center space-x-2">
-              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg shadow-inner-glow">
+              <div className="p-2 bg-white/20 rounded-lg shadow-inner-glow">
                 <Package className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -52,7 +52,7 @@ export function Sidebar() {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    'group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 backdrop-blur-sm',
+                    'group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
                     isActive
                       ? 'bg-white/20 text-white shadow-glow border border-white/30'
                       : 'text-white/80 hover:bg-white/10 hover:text-white'
@@ -76,7 +76,7 @@ export function Sidebar() {
         <div className="flex flex-shrink-0 border-t border-white/20 p-4">
           <div className="group block w-full flex-shrink-0">
             <div className="flex items-center">
-              <div className="inline-block h-9 w-9 rounded-full bg-white/20 backdrop-blur-sm shadow-inner-glow"></div>
+              <div className="inline-block h-9 w-9 rounded-full bg-white/20 shadow-inner-glow"></div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white drop-shadow-sm">ผู้ดูแลระบบ</p>
                 <p className="text-xs text-white/80">ผู้จัดการสต็อก</p>

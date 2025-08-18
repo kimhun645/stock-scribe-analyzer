@@ -35,7 +35,7 @@ export function StockOverview() {
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {/* Low Stock Alerts */}
-      <Card className="bg-white/70 backdrop-blur-sm shadow-card border border-white/40">
+      <Card className="bg-white shadow-card border border-white/40">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-base font-medium flex items-center text-gray-800">
             <AlertTriangle className="h-4 w-4 text-warning mr-2" />
@@ -50,7 +50,7 @@ export function StockOverview() {
             {lowStockProducts.slice(0, 5).map(product => {
               const category = categories.find(c => c.id === product.category_id);
               return (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm rounded-lg border border-white/30">
+                <div key={product.id} className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-white/30">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">{product.name}</p>
                     <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>
@@ -85,7 +85,7 @@ export function StockOverview() {
       </Card>
 
       {/* Out of Stock */}
-      <Card className="bg-white/70 backdrop-blur-sm shadow-card border border-white/40">
+      <Card className="bg-white shadow-card border border-white/40">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-base font-medium flex items-center text-gray-800">
             <TrendingDown className="h-4 w-4 text-destructive mr-2" />
@@ -100,7 +100,7 @@ export function StockOverview() {
             {outOfStockProducts.slice(0, 5).map(product => {
               const category = categories.find(c => c.id === product.category_id);
               return (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-white/50 backdrop-blur-sm rounded-lg border border-white/30">
+                <div key={product.id} className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-white/30">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">{product.name}</p>
                     <p className="text-xs text-muted-foreground">SKU: {product.sku}</p>

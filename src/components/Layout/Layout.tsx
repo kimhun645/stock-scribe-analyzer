@@ -26,7 +26,7 @@ export function Layout({ children, title, hideHeader = false }: LayoutProps) {
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm" 
+            className="absolute inset-0 bg-black/50" 
             onClick={() => setSidebarOpen(false)}
           />
           <div className="relative flex w-full max-w-xs flex-1 flex-col bg-gradient-primary shadow-glow">
@@ -41,7 +41,7 @@ export function Layout({ children, title, hideHeader = false }: LayoutProps) {
         <main className={`flex-1 overflow-auto ${hideHeader ? 'pt-0' : ''}`}>
           <div className="w-full px-4 py-6 sm:px-6 lg:px-8 relative">
             {/* Content Background */}
-            <div className="absolute inset-0 bg-white/40 backdrop-blur-xl rounded-t-3xl border border-white/20 shadow-glow -z-10"></div>
+            <div className="absolute inset-0 bg-white/90 rounded-t-3xl border border-white/20 shadow-glow -z-10"></div>
             <div className="relative z-10 w-full">
               <div className="mx-auto max-w-7xl">
                 {children}
